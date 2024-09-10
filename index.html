@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Nodes Status Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Worker Nodes Status Monitor</h1>
+            <button class="refresh-btn" id="refreshBtn">Refresh</button>
+        </div>
+
+        <!-- Loader for page loading -->
+        <div class="loader" id="loader" style="display: none;"></div>
+
+        <!-- Warning message in case of API failure -->
+        <div class="warning-container" id="warningContainer" style="display: none;">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-message">
+                <!-- <h2>Oops! We broke it! 😅</h2> -->
+                <!-- <p>It looks like the CPU statuses decided to take a break. Maybe they're on a coffee run? ☕</p> -->
+                <p>Try refreshing in a bit. Or Check the API !!.</p>
+            </div>
+        </div>
+
+        <div class="cpu-container" id="cpuContainer">
+            <!-- CPUs will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        async function fetchCPUStatuses() {
+            document.getElementById('loader').style.display = 'block'; // Show loader
+            try {
+                const response = await fetch('http://localhost:3000/cpu-statuses');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const cpuStatuses = await response.json();
+                renderCPUStatuses(cpuStatuses);
+                document.getElementById('warningContainer').style.display = 'none'; // Hide warning if successful
+            } catch (error) {
+                console.error('Error fetching CPU statuses:', error);
+                document.getElementById('warningContainer').style.display = 'flex'; // Show warning if API fails
+                document.getElementById('cpuContainer').innerHTML = ''; // Clear any previous data
+            } finally {
+                document.getElementById('loader').style.display = 'none'; // Hide loader after fetching
+            }
+        }
+
+        function renderCPUStatuses(cpuStatuses) {
+            const cpuContainer = document.getElementById('cpuContainer');
+            cpuContainer.innerHTML = ''; // Clear previous content
+
+            cpuStatuses.forEach(cpu => {
+                const cpuBox = document.createElement('div');
+                cpuBox.className = 'cpu-box';
+                cpuBox.onclick = () => window.location.href = `cpu.html?id=${cpu.id}`;
+
+                const cpuIcon = document.createElement('div');
+                cpuIcon.className = 'cpu-icon';
+                cpuIcon.innerHTML = '🖥️';
+
+                const cpuName = document.createElement('div');
+                cpuName.className = 'cpu-name';
+                cpuName.innerText = cpu.cpu;
+
+                const cpuStatus = document.createElement('div');
+                cpuStatus.className = 'cpu-status';
+
+                const statusIndicator = document.createElement('div');
+                statusIndicator.className = `status-indicator ${cpu.active ? 'active' : 'stopped'}`;
+
+                const statusText = document.createElement('span');
+                statusText.innerText = cpu.status;
+
+                cpuStatus.appendChild(statusIndicator);
+                cpuStatus.appendChild(statusText);
+
+                const timestamp = document.createElement('small');
+                timestamp.className = 'timestamp';
+                timestamp.innerText = `Last updated: ${cpu.timestamp}`;
+
+                cpuBox.appendChild(cpuIcon);
+                cpuBox.appendChild(cpuName);
+                cpuBox.appendChild(cpuStatus);
+                cpuBox.appendChild(timestamp);
+
+                cpuContainer.appendChild(cpuBox);
+            });
+        }
+
+        setInterval(fetchCPUStatuses, 60000); // Refresh every minute
+        fetchCPUStatuses();
+
+        document.getElementById('refreshBtn').addEventListener('click', fetchCPUStatuses);
+    </script>
+</body>
+</html>

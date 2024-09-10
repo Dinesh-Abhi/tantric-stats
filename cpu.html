@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <script src="js/libs/chart.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="cpuTitle">CPU Details</h1>
+        </div>
+        <div class="cpu-details" id="cpuDetails">
+            <!-- CPU data will be dynamically added here -->
+        </div>
+        <canvas id="usageChart" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        async function fetchCPUDetails(cpuId) {
+            try {
+                const response = await fetch(`http://localhost:3000/cpu/${cpuId}`);
+                const cpuDetails = await response.json();
+                renderCPUDetails(cpuDetails);
+            } catch (error) {
+                console.error('Error fetching CPU details:', error);
+            }
+        }
+
+        function renderCPUDetails(cpuDetails) {
+            document.getElementById('cpuTitle').innerText = `CPU Details - ${cpuId}`;
+            
+            const cpuDetailsContainer = document.getElementById('cpuDetails');
+            cpuDetailsContainer.innerHTML = `
+                <p><strong>CPU Consumption:</strong> ${cpuDetails.consumption}%</p>
+                <p><strong>Memory Usage:</strong> ${cpuDetails.memory}%</p>
+                <p><strong>Errors:</strong> ${cpuDetails.errors.join(', ')}</p>
+                <p><strong>Last updated:</strong> ${cpuDetails.timestamp}</p>
+            `;
+
+            // Render chart for usage history
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            const usageChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Past 1', 'Past 2', 'Past 3'],
+                    datasets: [{
+                        label: 'CPU Usage History',
+                        data: cpuDetails.usageHistory,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    }]
+                }
+            });
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const cpuId = urlParams.get('id');
+        fetchCPUDetails(cpuId);
+    </script>
+</body>
+</html>

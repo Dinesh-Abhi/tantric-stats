@@ -1,0 +1,166 @@
+/* Container and header styles */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.refresh-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.refresh-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Warning Message Styles */
+.warning-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.warning-icon {
+    font-size: 3em;
+    margin-right: 20px;
+}
+
+.warning-message h2 {
+    margin: 0 0 10px;
+    color: #856404;
+}
+
+.warning-message p {
+    margin: 0;
+    color: #856404;
+}
+
+/* Responsive CPU container styles */
+.cpu-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* CPU Box Styling */
+.cpu-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    text-align: center;
+}
+
+.cpu-box:hover {
+    transform: translateY(-5px);
+    background-color: #ececec;
+}
+
+/* Icon and status styling */
+.cpu-icon {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.cpu-name {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.cpu-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+
+.active {
+    background-color: green;
+}
+
+.stopped {
+    background-color: red;
+}
+
+/* Timestamp styling */
+.timestamp {
+    font-size: 0.8em;
+    color: #666;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .cpu-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .cpu-container {
+        grid-template-columns: 1fr;
+    }
+
+    .cpu-box {
+        padding: 15px;
+    }
+}
+
+/* Loader Styles */
+.loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db; 
+    border-radius: 50%;
+    width: 30px; 
+    height: 30px; 
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Define the spinning animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.cpu-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+    opacity: 1;
+    /* Ensure visibility of CPU container */
+}
